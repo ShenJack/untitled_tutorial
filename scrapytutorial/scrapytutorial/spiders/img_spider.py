@@ -10,13 +10,15 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         package = 2800
-        while package < 2801:
+        while package < 3000:
             urls = [base_url + "/" + str(package) + "/" + str(i) + ".jpg" for i in range(0, 100)]
             for url in urls:
                 yield scrapy.Request(url=url, callback=self.parse)
             package += 1
 
     def parse(self, response):
+        if response.status == 404:
+            pass
         package = response.url.split("/")[-2]
         img = response.url.split("/")[-1]
         filename = save_path + "/" + package + "/" + img
